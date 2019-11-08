@@ -61,31 +61,28 @@
             app:layout_constraintStart_toEndOf="@id/minHeader"
             app:layout_constraintTop_toBottomOf="@id/bigHeader" />
 
-        <LinearLayout
-            android:id="@+id/governorContainer"
+        <pl.tamides.mi9secpuconfigurator.views.SelectableTextListView
+            android:id="@+id/bigGovernorList"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toStartOf="@id/minContainer"
+            app:layout_constraintEnd_toStartOf="@id/bigMinList"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/governorHeader" />
 
-        <LinearLayout
-            android:id="@+id/minContainer"
+        <pl.tamides.mi9secpuconfigurator.views.SelectableTextListView
+            android:id="@+id/bigMinList"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toStartOf="@id/maxContainer"
-            app:layout_constraintStart_toEndOf="@id/governorContainer"
+            app:layout_constraintEnd_toStartOf="@id/bigMaxList"
+            app:layout_constraintStart_toEndOf="@id/bigGovernorList"
             app:layout_constraintTop_toBottomOf="@id/minHeader" />
 
-        <LinearLayout
-            android:id="@+id/maxContainer"
+        <pl.tamides.mi9secpuconfigurator.views.SelectableTextListView
+            android:id="@+id/bigMaxList"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/minContainer"
+            app:layout_constraintStart_toEndOf="@id/bigMinList"
             app:layout_constraintTop_toBottomOf="@id/maxHeader" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

@@ -29,16 +29,17 @@ public class RootTerminal {
     public String execCommand(String command) {
         try {
             new ProcessBuilder().command("su", "-c", command + " > " + tmpFile.getAbsolutePath()).start().waitFor();
+            String result = new TextFile(tmpFile).getFileText();
 
             if (!tmpFile.delete()) {
                 throw new Exception("Can't delete " + tmpFile.getAbsolutePath() + " file");
             }
+
+            return result;
         } catch (Exception e) {
             e.printStackTrace();
             ShortMessage.getInstance().show(e.getMessage());
             return null;
         }
-
-        return new TextFile(tmpFile).getFileText();
     }
 }

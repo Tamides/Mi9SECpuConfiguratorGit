@@ -65,6 +65,8 @@ public class SelectableTextListView extends LinearLayout {
                 v.setBackgroundColor(ColorsManager.getInstance().getColor(R.color.gray));
                 setNotSelectedItemsBackground();
             });
+
+            addView(view);
         }
 
         return this;
