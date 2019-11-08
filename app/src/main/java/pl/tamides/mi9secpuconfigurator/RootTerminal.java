@@ -29,6 +29,10 @@ public class RootTerminal {
     public String execCommand(String command) {
         try {
             new ProcessBuilder().command("su", "-c", command + " > " + tmpFile.getAbsolutePath()).start().waitFor();
+
+            if (!tmpFile.delete()) {
+                throw new Exception("Can't delete " + tmpFile.getAbsolutePath() + " file");
+            }
         } catch (Exception e) {
             e.printStackTrace();
             ShortMessage.getInstance().show(e.getMessage());
