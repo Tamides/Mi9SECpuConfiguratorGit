@@ -97,7 +97,7 @@
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/bigGovernorList" />
+            app:layout_constraintTop_toBottomOf="@id/bigMinList" />
 
         <TextView
             android:id="@+id/littleGovernorHeader"
@@ -163,11 +163,12 @@
             app:layout_constraintTop_toBottomOf="@id/littleMinHeader" />
 
         <Button
+            android:id="@+id/save"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/save"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/littleGovernorList" />
+            app:layout_constraintTop_toBottomOf="@id/littleMinList" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
