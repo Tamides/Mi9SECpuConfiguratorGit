@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Mi9SECpuConfigurator</string>
+    <string name="big">Big</string>
+    <string name="little">Little</string>
+    <string name="governor">Governor</string>
+    <string name="min">Min</string>
+    <string name="max">Max</string>
+    <string name="save">Zapisz</string>
+</resources>
