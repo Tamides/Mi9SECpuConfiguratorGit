@@ -29,7 +29,7 @@ public class MainActivity extends BaseActivity {
 //
 //        List<String> aaa = new ArrayList<>();
 //        for (int i = 0; i < 8; i++) {
-//            String commandResult = RootTerminal.getInstance().execCommand("cat /sys/devices/system/cpu/cpu" + i + "/cpufreq/cpuinfo_max_freq");
+//            String commandResult = RootTerminal.getInstance().getCommandResult("cat /sys/devices/system/cpu/cpu" + i + "/cpufreq/cpuinfo_max_freq");
 //            List<String> frequencies = Arrays.asList(commandResult.split(" "));
 //
 //
@@ -105,7 +105,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private List<String> getGovernors() {
-        String commandResult = RootTerminal.getInstance().execCommand("cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors");
+        String commandResult = RootTerminal.getInstance().getCommandResult("cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors");
 
         if (commandResult == null) {
             return null;
@@ -115,7 +115,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private List<String> getBigCoresFrequencies() {
-        String commandResult = RootTerminal.getInstance().execCommand("cat /sys/devices/system/cpu/cpu7/cpufreq/scaling_available_frequencies");
+        String commandResult = RootTerminal.getInstance().getCommandResult("cat /sys/devices/system/cpu/cpu7/cpufreq/scaling_available_frequencies");
 
         if (commandResult == null) {
             return null;
@@ -125,7 +125,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private List<String> getLittleCoresFrequencies() {
-        String commandResult = RootTerminal.getInstance().execCommand("cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_frequencies");
+        String commandResult = RootTerminal.getInstance().getCommandResult("cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_frequencies");
 
         if (commandResult == null) {
             return null;
@@ -135,27 +135,27 @@ public class MainActivity extends BaseActivity {
     }
 
     private String getBigCoresCurrentGovernor() {
-        return RootTerminal.getInstance().execCommand("cat /sys/devices/system/cpu/cpu7/cpufreq/scaling_governor");
+        return RootTerminal.getInstance().getCommandResult("cat /sys/devices/system/cpu/cpu7/cpufreq/scaling_governor");
     }
 
     private String getLittleCoresCurrentGovernor() {
-        return RootTerminal.getInstance().execCommand("cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor");
+        return RootTerminal.getInstance().getCommandResult("cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor");
     }
 
     private String getBigCoresCurrentMinFrequency() {
-        return RootTerminal.getInstance().execCommand("cat /sys/devices/system/cpu/cpu7/cpufreq/cpuinfo_min_freq");
+        return RootTerminal.getInstance().getCommandResult("cat /sys/devices/system/cpu/cpu7/cpufreq/scaling_min_freq");
     }
 
     private String getLittleCoresCurrentMinFrequency() {
-        return RootTerminal.getInstance().execCommand("cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq");
+        return RootTerminal.getInstance().getCommandResult("cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq");
     }
 
     private String getBigCoresCurrentMaxFrequency() {
-        return RootTerminal.getInstance().execCommand("cat /sys/devices/system/cpu/cpu7/cpufreq/cpuinfo_max_freq");
+        return RootTerminal.getInstance().getCommandResult("cat /sys/devices/system/cpu/cpu7/cpufreq/scaling_max_freq");
     }
 
     private String getLittleCoresCurrentMaxFrequency() {
-        return RootTerminal.getInstance().execCommand("cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq");
+        return RootTerminal.getInstance().getCommandResult("cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq");
     }
 
     private void saveData() {
@@ -167,18 +167,31 @@ public class MainActivity extends BaseActivity {
         String chosenlLittleCoresMaxFrequency = littleMaxList.getSelectedItemText();
 
         thread = new Thread(() -> {
-            String commandResult = RootTerminal.getInstance().execCommand(
-                    "echo " + chosenBigCoresGovernor + " > /sys/devices/system/cpu/cpu7/cpufreq/scaling_governor && " +
-                            "echo " + chosenBigCoresMinFrequency + " > /sys/devices/system/cpu/cpu7/cpufreq/cpuinfo_min_freq && " +
-                            "echo " + chosenBigCoresMaxFrequency + " > /sys/devices/system/cpu/cpu7/cpufreq/cpuinfo_max_freq && " +
-                            "echo " + chosenLittleCoresGovernor + " > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor && " +
-                            "echo " + chosenLittleCoresMinFrequency + " > /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq && " +
-                            "echo " + chosenlLittleCoresMaxFrequency + " > /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq"
-            );
+            StringBuilder commandBuilder = new StringBuilder();
 
-            if (commandResult != null && !Thread.currentThread().isInterrupted()) {
-                runOnUiThread(this::finish);
+            for (int i = 0; i < 6; i++) {
+                commandBuilder.append("echo " + chosenLittleCoresGovernor + " > /sys/devices/system/cpu/cpu" + i + "/cpufreq/scaling_governor && ");
+//                commandBuilder.append("echo " + chosenLittleCoresMinFrequency + " > /sys/devices/system/cpu/cpu" + i + "/cpufreq/scaling_min_freq && ");
+//                commandBuilder.append("echo " + chosenlLittleCoresMaxFrequency + " > /sys/devices/system/cpu/cpu" + i + "/cpufreq/scaling_max_freq && ");
             }
+
+            for (int i = 6; i < 8; i++) {
+                commandBuilder.append("echo " + chosenBigCoresGovernor + " > /sys/devices/system/cpu/cpu" + i + "/cpufreq/scaling_governor");
+//                commandBuilder.append("echo " + chosenBigCoresMinFrequency + " > /sys/devices/system/cpu/cpu" + i + "/cpufreq/scaling_min_freq && ");
+//                commandBuilder.append("echo " + chosenBigCoresMaxFrequency + " > /sys/devices/system/cpu/cpu" + i + "/cpufreq/scaling_max_freq");
+
+                if (i != 7) {
+                    commandBuilder.append(" && ");
+                }
+            }
+
+            RootTerminal.getInstance().execCommand(commandBuilder.toString());
+
+            if (Thread.currentThread().isInterrupted()) {
+                return;
+            }
+
+            runOnUiThread(this::finish);
         });
         thread.start();
     }

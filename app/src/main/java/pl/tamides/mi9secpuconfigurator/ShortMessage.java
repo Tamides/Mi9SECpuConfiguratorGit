@@ -19,6 +19,6 @@ public class ShortMessage {
     }
 
     public void show(String message) {
-        Toast.makeText(App.getAppContext(), message, Toast.LENGTH_SHORT).show();
+        App.getCurrentActivity().runOnUiThread(() -> Toast.makeText(App.getAppContext(), message, Toast.LENGTH_SHORT).show());
     }
 }

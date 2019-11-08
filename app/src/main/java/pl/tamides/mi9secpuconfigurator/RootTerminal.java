@@ -26,7 +26,7 @@ public class RootTerminal {
         return instance;
     }
 
-    public String execCommand(String command) {
+    public String getCommandResult(String command) {
         try {
             new ProcessBuilder().command("su", "-c", command + " > " + tmpFile.getAbsolutePath()).start().waitFor();
             String result = new TextFile(tmpFile).getFileText();
@@ -40,6 +40,15 @@ public class RootTerminal {
             e.printStackTrace();
             ShortMessage.getInstance().show(e.getMessage());
             return null;
+        }
+    }
+
+    public void execCommand(String command) {
+        try {
+            new ProcessBuilder().command("su", "-c", command + " > " + tmpFile.getAbsolutePath()).start().waitFor();
+        } catch (Exception e) {
+            e.printStackTrace();
+            ShortMessage.getInstance().show(e.getMessage());
         }
     }
 }
