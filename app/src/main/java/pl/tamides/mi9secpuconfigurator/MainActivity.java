@@ -2,19 +2,20 @@ package pl.tamides.mi9secpuconfigurator;
 
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import pl.tamides.mi9secpuconfigurator.views.SelectableTextListView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private SelectableTextListView bigGovernorList;
     private SelectableTextListView bigMinList;
     private SelectableTextListView bigMaxList;
+    private SelectableTextListView littleGovernorList;
+    private SelectableTextListView littleMinList;
+    private SelectableTextListView littleMaxList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,5 +45,8 @@ public class MainActivity extends AppCompatActivity {
         bigGovernorList = findViewById(R.id.bigGovernorList);
         bigMinList = findViewById(R.id.bigMinList);
         bigMaxList = findViewById(R.id.bigMaxList);
+        littleGovernorList = findViewById(R.id.littleGovernorList);
+        littleMinList = findViewById(R.id.littleMinList);
+        littleMaxList = findViewById(R.id.littleMaxList);
     }
 }
