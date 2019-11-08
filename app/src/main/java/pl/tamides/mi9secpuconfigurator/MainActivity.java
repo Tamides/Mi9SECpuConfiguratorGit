@@ -159,6 +159,27 @@ public class MainActivity extends BaseActivity {
     }
 
     private void saveData() {
+        String chosenBigCoresGovernor = bigGovernorList.getSelectedItemText();
+        String chosenBigCoresMinFrequency = bigMinList.getSelectedItemText();
+        String chosenBigCoresMaxFrequency = bigMaxList.getSelectedItemText();
+        String chosenLittleCoresGovernor = littleGovernorList.getSelectedItemText();
+        String chosenLittleCoresMinFrequency = littleMinList.getSelectedItemText();
+        String chosenlLittleCoresMaxFrequency = littleMaxList.getSelectedItemText();
 
+        thread = new Thread(() -> {
+            String commandResult = RootTerminal.getInstance().execCommand(
+                    "echo " + chosenBigCoresGovernor + " > /sys/devices/system/cpu/cpu7/cpufreq/scaling_governor && " +
+                            "echo " + chosenBigCoresMinFrequency + " > /sys/devices/system/cpu/cpu7/cpufreq/cpuinfo_min_freq && " +
+                            "echo " + chosenBigCoresMaxFrequency + " > /sys/devices/system/cpu/cpu7/cpufreq/cpuinfo_max_freq && " +
+                            "echo " + chosenLittleCoresGovernor + " > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor && " +
+                            "echo " + chosenLittleCoresMinFrequency + " > /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq && " +
+                            "echo " + chosenlLittleCoresMaxFrequency + " > /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq"
+            );
+
+            if (commandResult != null && !Thread.currentThread().isInterrupted()) {
+                runOnUiThread(this::finish);
+            }
+        });
+        thread.start();
     }
 }
