@@ -25,6 +25,7 @@ public class MainActivity extends BaseActivity {
 
         findViews();
         loadData();
+        setListeners();
 //
 //        List<String> aaa = new ArrayList<>();
 //        for (int i = 0; i < 8; i++) {
@@ -43,7 +44,7 @@ public class MainActivity extends BaseActivity {
 //                .selectItem("1708800");
     }
 
-    public void findViews() {
+    private void findViews() {
         bigGovernorList = findViewById(R.id.bigGovernorList);
         bigMinList = findViewById(R.id.bigMinList);
         bigMaxList = findViewById(R.id.bigMaxList);
@@ -53,11 +54,21 @@ public class MainActivity extends BaseActivity {
         save = findViewById(R.id.save);
     }
 
+    private void setListeners() {
+        save.setOnClickListener(v -> saveData());
+    }
+
     private void loadData() {
         thread = new Thread(() -> {
             List<String> governors = getGovernors();
             List<String> bigCoresFrequencies = getBigCoresFrequencies();
             List<String> littleCoresFrequencies = getLittleCoresFrequencies();
+            String bigCoresCurrentGovernor = getBigCoresCurrentGovernor();
+            String bigCoresCurrentMinFrequency = getBigCoresCurrentMinFrequency();
+            String bigCoresCurrentMaxFrequency = getBigCoresCurrentMaxFrequency();
+            String littleCoresCurrentGovernor = getLittleCoresCurrentGovernor();
+            String littleCoresCurrentMinFrequency = getLittleCoresCurrentMinFrequency();
+            String littleCoresCurrentMaxFrequency = getLittleCoresCurrentMaxFrequency();
 
             if (governors == null || bigCoresFrequencies == null || littleCoresFrequencies == null || Thread.currentThread().isInterrupted()) {
                 return;
@@ -66,22 +77,28 @@ public class MainActivity extends BaseActivity {
             runOnUiThread(() -> {
                 bigGovernorList
                         .setItemLayoutId(R.layout.text_item)
-                        .setItems(governors);
+                        .setItems(governors)
+                        .selectItem(bigCoresCurrentGovernor);
                 bigMinList
                         .setItemLayoutId(R.layout.text_item)
-                        .setItems(bigCoresFrequencies);
+                        .setItems(bigCoresFrequencies)
+                        .selectItem(bigCoresCurrentMinFrequency);
                 bigMaxList
                         .setItemLayoutId(R.layout.text_item)
-                        .setItems(bigCoresFrequencies);
+                        .setItems(bigCoresFrequencies)
+                        .selectItem(bigCoresCurrentMaxFrequency);
                 littleGovernorList
                         .setItemLayoutId(R.layout.text_item)
-                        .setItems(governors);
+                        .setItems(governors)
+                        .selectItem(littleCoresCurrentGovernor);
                 littleMinList
                         .setItemLayoutId(R.layout.text_item)
-                        .setItems(littleCoresFrequencies);
+                        .setItems(littleCoresFrequencies)
+                        .selectItem(littleCoresCurrentMinFrequency);
                 littleMaxList
                         .setItemLayoutId(R.layout.text_item)
-                        .setItems(littleCoresFrequencies);
+                        .setItems(littleCoresFrequencies)
+                        .selectItem(littleCoresCurrentMaxFrequency);
             });
         });
         thread.start();
@@ -115,5 +132,33 @@ public class MainActivity extends BaseActivity {
         }
 
         return Arrays.asList(commandResult.split(" "));
+    }
+
+    private String getBigCoresCurrentGovernor() {
+        return RootTerminal.getInstance().execCommand("cat /sys/devices/system/cpu/cpu7/cpufreq/scaling_governor");
+    }
+
+    private String getLittleCoresCurrentGovernor() {
+        return RootTerminal.getInstance().execCommand("cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor");
+    }
+
+    private String getBigCoresCurrentMinFrequency() {
+        return RootTerminal.getInstance().execCommand("cat /sys/devices/system/cpu/cpu7/cpufreq/cpuinfo_min_freq");
+    }
+
+    private String getLittleCoresCurrentMinFrequency() {
+        return RootTerminal.getInstance().execCommand("cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq");
+    }
+
+    private String getBigCoresCurrentMaxFrequency() {
+        return RootTerminal.getInstance().execCommand("cat /sys/devices/system/cpu/cpu7/cpufreq/cpuinfo_max_freq");
+    }
+
+    private String getLittleCoresCurrentMaxFrequency() {
+        return RootTerminal.getInstance().execCommand("cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq");
+    }
+
+    private void saveData() {
+
     }
 }
